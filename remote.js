@@ -2,7 +2,9 @@
  * smart-mirror remote by Evan Cohen
  */
 const stream = require('stream')
+const bodyParser = require('body-parser');
 let remote = new stream.Writable()
+
 remote.start = function () {
 	const express = require('express')
 	const app = express()
@@ -42,6 +44,7 @@ remote.start = function () {
   // Start the server
 	server.listen(config.remote.port)
   // Use the remote directory and initilize socket connection
+    app.use(bodyParser.json());
 	app.use(express.static(__dirname + '/remote'))
 	remote.io = require('socket.io')(server)
 
@@ -49,6 +52,14 @@ remote.start = function () {
    * When the connection begins
    */
 	remote.io.on('connection', function (socket) {
+        app.put('/', function(req, res) {
+            "use strict";
+
+            if(req.body.command) {
+            	remote.emit('action', req.body.command);
+			}
+        });
+
 		socket.emit('connected')
 
     // When the mirror recieves a remote command
