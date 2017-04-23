@@ -187,6 +187,7 @@
 				update['bri'] = Math.round(setting['colorHSV'][2] * setting['brightness']);
 			}
 
+console.log('http://' + config.light.settings.hueIp + '/api/' + config.light.settings.hueUsername + "/groups/" + config.light.setup[index].targets[i].id + "/action");
 			$http.put('http://' + config.light.settings.hueIp + '/api/' + config.light.settings.hueUsername + "/groups/" + config.light.setup[index].targets[i].id + "/action", update)
                 .success(function (data, status) {
 	console.log(status, data);
