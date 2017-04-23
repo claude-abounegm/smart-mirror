@@ -132,8 +132,9 @@ if (config.remote && config.remote.enabled || firstRun) {
 	})
 
 	remote.on('action', function (command) {
-        request.put("CONTROL_PI_ADDRESS", { "action": command });
-    });
+        	request.put({ url: "http://10.4.10.46:3000/control", json: true, body: { "action": command } });
+		console.log(command);
+	});
 
 	remote.on('devtools', function (open) {
 		if (open) {

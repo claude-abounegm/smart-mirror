@@ -47,19 +47,18 @@ remote.start = function () {
     app.use(bodyParser.json());
 	app.use(express.static(__dirname + '/remote'))
 	remote.io = require('socket.io')(server)
-
-  /**
-   * When the connection begins
-   */
-	remote.io.on('connection', function (socket) {
         app.put('/', function(req, res) {
             "use strict";
-
+	    console.log(req.body.command);
             if(req.body.command) {
             	remote.emit('action', req.body.command);
 			}
         });
 
+  /**
+   * When the connection begins
+   */
+	remote.io.on('connection', function (socket) {
 		socket.emit('connected')
 
     // When the mirror recieves a remote command
