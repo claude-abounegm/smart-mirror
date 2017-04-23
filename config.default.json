@@ -43,6 +43,15 @@
         "setup" : []
     },
 
+    "blinds" : {
+        "ip": "",
+        "commands": {
+          "open": "up",
+          "close": "down",
+          "action": "action"
+        }
+    },
+
     "calendar": {
       "icals" : [""],
       "maxResults": 9,
