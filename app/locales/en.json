@@ -185,6 +185,16 @@
             "voice": "(turn) (the) :state (the) light(s) *action",
             "description": "Control color and brightness of lights."
         },
+        "blinds_open": {
+            "text": "open blinds",
+            "voice": "open (the) blinds",
+            "description": "Open blinds."
+        },
+        "blinds_close": {
+            "text": "close blinds",
+            "voice": "close (the) blinds",
+            "description": "Close blinds."
+        },
         "show_remoteQR":{
             "text": "Show Remote Link",
             "voice": "Show remote (QR code) (QR) (link)",

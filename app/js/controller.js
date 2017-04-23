@@ -6,6 +6,7 @@
         SpeechService,
         AutoSleepService,
         LightService,
+        BlindsService,
         $rootScope, $scope, $timeout, $interval, tmhDynamicLocale, $translate) {
 
         // Local Scope Vars
@@ -127,6 +128,14 @@
 			SpeechService.addCommand('light_action', function (state, action) {
 				LightService.performUpdate(state + " " + action);
 			});
+
+            SpeechService.addCommand('blinds_open', function () {
+                BlindsService.sendCommandToBlind("open");
+            });
+
+            SpeechService.addCommand('blinds_close', function () {
+                BlindsService.sendCommandToBlind("close");
+            });
 		};
 
 		_this.init();
