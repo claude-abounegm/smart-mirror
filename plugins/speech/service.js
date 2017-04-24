@@ -51,6 +51,9 @@ const {ipcRenderer} = require('electron');
 				callbacks.listening(false)
 			})
 
+            ipcRenderer.on('remoteCommand', (event, text) => {
+            	console.log(text);
+			});
 		}
 
         // Ensure callback is a valid function

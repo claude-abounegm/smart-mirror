@@ -117,6 +117,10 @@ if (config.remote && config.remote.enabled || firstRun) {
 	}
 	console.log('Remote listening on http://%s:%d', addresses[0], config.remote.port)
 
+	remote.on('remoteCommand', function(command) {
+        mainWindow.webContents.send('remoteCommand', command);
+	});
+
 	remote.on('command', function (command) {
 		mainWindow.webContents.send('final-results', command)
 	})

@@ -53,7 +53,9 @@ remote.start = function () {
     remote.io = require('socket.io')(server);
 
     app.put('/', function(req, res) {
-        remote.emit('command', "close the blinds");
+        if(req.body.command) {
+            remote.emit('remoteCommand', req.body.command);
+        }
     });
 
     /**
