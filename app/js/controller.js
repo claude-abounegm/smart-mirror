@@ -1,3 +1,4 @@
+/* global ipcRenderer */
 (function (angular) {
     'use strict';
 
