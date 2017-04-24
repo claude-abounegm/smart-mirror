@@ -185,21 +185,6 @@
             "voice": "(turn) (the) :state (the) light(s) *action",
             "description": "Control color and brightness of lights."
         },
-        "blinds_open": {
-            "text": "Open blinds",
-            "voice": "open (the) blinds",
-            "description": "Open blinds."
-        },
-        "blinds_close": {
-            "text": "Close blinds",
-            "voice": "close (the) blinds",
-            "description": "Close blinds."
-        },
-        "blinds_stop": {
-            "text": "Stop blinds",
-            "voice": "Stop (the) blinds",
-            "description": "Stop blinds."
-        },
         "show_remoteQR":{
             "text": "Show Remote Link",
             "voice": "Show remote (QR code) (QR) (link)",
@@ -219,6 +204,38 @@
             "text": "Remove ________ from (my) ________ list",
             "voice": "Remove *element from (my) *project list",
             "description": "Remove item from requested list."
+        },
+
+
+        "blinds_open": {
+            "text": "Open blinds",
+            "voice": "open (the) blinds",
+            "description": "Open blinds."
+        },
+        "blinds_close": {
+            "text": "Close blinds",
+            "voice": "close (the) blinds",
+            "description": "Close blinds."
+        },
+        "blinds_stop": {
+            "text": "Stop blinds",
+            "voice": "stop (the) blinds",
+            "description": "Stop blinds."
+        },
+        "hvac_cool": {
+            "text": "Start cool HVAC",
+            "voice": "start cool (hvac) (ac) (air conditioning)",
+            "description": "Start the cool air conditioning."
+        },
+        "hvac_heat": {
+            "text": "Start heat HVAC",
+            "voice": "start heat (hvac) (ac) (air conditioning)",
+            "description": "Start heat air conditioning."
+        },
+        "hvac_off": {
+            "text": "Turn off HVAC",
+            "voice": "(turn) (switch) off (hvac) (ac) (air conditioning)",
+            "description": "Turns off HVAC"
         }
     },
     "fitbit": {

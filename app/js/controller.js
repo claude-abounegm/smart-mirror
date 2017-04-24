@@ -6,6 +6,7 @@
                         AutoSleepService,
                         LightService,
                         BlindsService,
+                        HVACService,
                         $rootScope, $scope, $timeout, $interval, tmhDynamicLocale, $translate) {
 
         // Local Scope Vars
@@ -97,11 +98,6 @@
             updateTime();
             restCommand();
 
-            var defaultView = function () {
-                console.debug("Ok, going to default view...");
-                Focus.change("default");
-            }
-
             // List commands
             SpeechService.addCommand('list', function () {
                 console.debug("Here is a list of commands...");
@@ -111,7 +107,10 @@
             });
 
             // Go back to default view
-            SpeechService.addCommand('home', defaultView);
+            SpeechService.addCommand('home', function () {
+                console.debug("Ok, going to default view...");
+                Focus.change("default");
+            });
 
             SpeechService.addCommand('debug', function () {
                 console.debug("Boop Boop. Showing debug info...");
@@ -128,23 +127,31 @@
                 LightService.performUpdate(state + " " + action);
             });
 
-            // blinds
-            (function addBlindsSpeechCommands() {
-                let blindsCommands = {
-                    blinds_open: "open",
-                    blinds_close: "close",
-                    blinds_stop: "stop"
-                };
-
+            // speech commands for blinds and hvac
+            function addSpeechCommands(commands, service) {
                 Object
-                    .keys(blindsCommands)
+                    .keys(commands)
                     .forEach(function (key) {
-                        let value = blindsCommands[key];
+                        let value = commands[key];
                         SpeechService.addCommand(key, function () {
-                            BlindsService.sendCommandToBlind(value);
+                            service.sendCommand(value);
                         });
                     });
-            })();
+            }
+
+            // blinds
+            addSpeechCommands({
+                blinds_open: "open",
+                blinds_close: "close",
+                blinds_stop: "stop"
+            }, BlindsService);
+
+            // hvac
+            addSpeechCommands({
+                hvac_cool: "cool",
+                hvac_heat: "heat",
+                hvac_off: "off"
+            }, HVACService);
 
             // find the command and execute it with the params
             ipcRenderer.on('remoteCommand', function (event, data) {

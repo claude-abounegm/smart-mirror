@@ -3,12 +3,12 @@
 
     angular
         .module('SmartMirror')
-        .factory('BlindsService', function BlindsService($http) {
+        .factory('HVACService', function HVACService($http) {
             return {
                 sendCommand: function (state) {
                     $http
-                        .put("http://" + config.blinds.ip + "/api/blinds", {
-                            action: config.blinds.commands[state]
+                        .put("http://" + config.blinds.ip + "/api/hvac", {
+                            action: state
                         })
                         .then((data, status) => {
                             console.log(status, data);
