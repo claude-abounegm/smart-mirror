@@ -186,17 +186,17 @@
             "description": "Control color and brightness of lights."
         },
         "blinds_open": {
-            "text": "open blinds",
+            "text": "Open blinds",
             "voice": "open (the) blinds",
             "description": "Open blinds."
         },
         "blinds_close": {
-            "text": "close blinds",
+            "text": "Close blinds",
             "voice": "close (the) blinds",
             "description": "Close blinds."
         },
         "blinds_stop": {
-            "text": "stop blinds",
+            "text": "Stop blinds",
             "voice": "Stop (the) blinds",
             "description": "Stop blinds."
         },

@@ -1,3 +1,5 @@
+const {ipcRenderer} = require('electron');
+
 (function (angular) {
     'use strict';
 
@@ -123,25 +125,30 @@
                 console.debug("It is", moment().format('h:mm:ss a'));
             });
 
-            // Control light
-            SpeechService.addCommand('light_action', function (state, action) {
-                LightService.performUpdate(state + " " + action);
-            });
-
-            // blinds
-            (function addBlindsSpeechCommands() {
-                SpeechService.addCommand('blinds_open', function () {
+            let commands = {
+                "light_action": function (state, action) {
+                    LightService.performUpdate(state + " " + action);
+                },
+                "blinds_open": function() {
                     BlindsService.sendCommandToBlind("open");
+                },
+                "blinds_close": function() {
+                    BlindsService.sendCommandToBlind("open");
+                },
+                "blinds_stop": function() {
+                    BlindsService.sendCommandToBlind("open");
+                },
+            };
+
+            Object
+                .keys(commands)
+                .forEach(function (key) {
+                    SpeechService.addCommand(key, commands[key]);
                 });
 
-                SpeechService.addCommand('blinds_close', function () {
-                    BlindsService.sendCommandToBlind("close");
-                });
-
-                SpeechService.addCommand('blinds_stop', function () {
-                    BlindsService.sendCommandToBlind("stop");
-                });
-            })();
+            ipcRenderer.on('remoteCommand', function(event, text) {
+                console.log(JSON.parse(text));
+            });
         };
 
         _this.init();
