@@ -11,8 +11,6 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 // Prevent the monitor from going to sleep.
 const powerSaveBlocker = electron.powerSaveBlocker
-
-const request = require('request');
 powerSaveBlocker.start('prevent-display-sleep')
 
 // Launching the mirror in dev mode
@@ -130,11 +128,6 @@ if (config.remote && config.remote.enabled || firstRun) {
 	remote.on('disconnected', function () {
 		mainWindow.webContents.send('disconnected')
 	})
-
-	remote.on('action', function (command) {
-        	request.put({ url: "http://10.4.10.46:3000/control", json: true, body: { "action": command } });
-		console.log(command);
-	});
 
 	remote.on('devtools', function (open) {
 		if (open) {

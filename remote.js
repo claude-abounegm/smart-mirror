@@ -47,13 +47,13 @@ remote.start = function () {
     app.use(bodyParser.json());
 	app.use(express.static(__dirname + '/remote'))
 	remote.io = require('socket.io')(server)
-        app.put('/', function(req, res) {
+        /*app.put('/', function(req, res) {
             "use strict";
 	    console.log(req.body.command);
             if(req.body.command) {
             	remote.emit('action', req.body.command);
 			}
-        });
+        });*/
 
   /**
    * When the connection begins
