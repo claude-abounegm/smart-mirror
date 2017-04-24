@@ -1,5 +1,3 @@
-const {ipcRenderer} = require('electron');
-
 (function (angular) {
     'use strict';
 
@@ -149,13 +147,18 @@ const {ipcRenderer} = require('electron');
                     });
             })();
 
-            ipcRenderer.on('remoteCommand', function(event, text) {
-                let data = JSON.parse(text);
-                if(typeof data.id === "string" && (!data.params || Array.isArray(data.params))) {
-                    if(SpeechService.commands[data.id]) {
-                        SpeechService.commands[data.id].apply(data.params);
-                    }
+            ipcRenderer.on('remoteCommand', function(event, data) {
+		if(typeof data === 'object') {
+		data.params = data.params || [];
+
+                if(typeof data.id === "string" && Array.isArray(data.params)) {
+			$translate("commands." + data.id + ".voice").then(function(key) {
+				$timeout(function() {
+					SpeechService.commands[key].apply(null, data.params);
+				});
+			});
                 }
+		}
             });
         };
 
