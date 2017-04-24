@@ -125,29 +125,37 @@ const {ipcRenderer} = require('electron');
                 console.debug("It is", moment().format('h:mm:ss a'));
             });
 
-            let commands = {
-                "light_action": function (state, action) {
-                    LightService.performUpdate(state + " " + action);
-                },
-                "blinds_open": function() {
-                    BlindsService.sendCommandToBlind("open");
-                },
-                "blinds_close": function() {
-                    BlindsService.sendCommandToBlind("open");
-                },
-                "blinds_stop": function() {
-                    BlindsService.sendCommandToBlind("open");
-                },
-            };
+            // Control light
+            SpeechService.addCommand('light_action', function (state, action) {
+                LightService.performUpdate(state + " " + action);
+            });
 
-            Object
-                .keys(commands)
-                .forEach(function (key) {
-                    SpeechService.addCommand(key, commands[key]);
-                });
+            // blinds
+            (function addBlindsSpeechCommands() {
+                let blindsCommands = {
+                    blinds_open: "open",
+                    blinds_close: "close",
+                    blinds_stop: "stop"
+                };
+
+                Object
+                    .keys(blindsCommands)
+                    .forEach(function(key) {
+                        let value = blindsCommands[key];
+
+                        SpeechService.addCommand(key, function () {
+                            BlindsService.sendCommandToBlind(value);
+                        });
+                    });
+            })();
 
             ipcRenderer.on('remoteCommand', function(event, text) {
-                console.log(JSON.parse(text));
+                let data = JSON.parse(text);
+                if(typeof data.id === "string" && (!data.params || Array.isArray(data.params))) {
+                    if(SpeechService.commands[data.id]) {
+                        SpeechService.commands[data.id].apply(data.params);
+                    }
+                }
             });
         };
 
