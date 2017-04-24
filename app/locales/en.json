@@ -195,6 +195,11 @@
             "voice": "close (the) blinds",
             "description": "Close blinds."
         },
+        "blinds_stop": {
+            "text": "stop blinds",
+            "voice": "Stop (the) blinds",
+            "description": "Stop blinds."
+        },
         "show_remoteQR":{
             "text": "Show Remote Link",
             "voice": "Show remote (QR code) (QR) (link)",

@@ -48,7 +48,7 @@
         "commands": {
           "open": "up",
           "close": "down",
-          "action": "action"
+          "stop": "stop"
         }
     },
 

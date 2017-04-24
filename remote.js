@@ -1,117 +1,118 @@
 /**
  * smart-mirror remote by Evan Cohen
  */
-const stream = require('stream')
+const stream = require('stream');
 const bodyParser = require('body-parser');
-let remote = new stream.Writable()
+let remote = new stream.Writable();
 
 remote.start = function () {
-	const express = require('express')
-	const app = express()
-	const fs = require('fs')
-	const getConfigSchema = require('./config.schema.js')
+    const express = require('express');
+    const app = express();
+    const fs = require('fs');
+    const getConfigSchema = require('./config.schema.js');
 
-	let config = ""
-	let configDefault = ""
-	let configJSON = ""
-	let configPath = __dirname + "/config.json"
-	let configDefaultPath = __dirname + "/config.default.json"
- 
-	function getFiles() {
-		configDefault = JSON.parse(fs.readFileSync(configDefaultPath, "utf8"))
+    let config = "";
+    let configDefault = "";
+    let configJSON = "";
+    let configPath = __dirname + "/config.json";
+    let configDefaultPath = __dirname + "/config.default.json";
 
-		if (fs.existsSync(configPath)) {
-			try {
-				config = JSON.parse(fs.readFileSync(configPath, "utf8")) //json'd config file
-			} catch (e) {
-				config = configDefault
-			}
-		} else {
-			config = configDefault
-		}
-		configDefault = JSON.parse(fs.readFileSync(configDefaultPath, "utf8"))
-    //TODO this is async, all of the remote should be async too
-		getConfigSchema(function (configSchema) {
-      //configSchema.form.push({"type":"button","title":"Submit","order":10000})
-			configSchema.form.sort(function (a, b) { return a.order - b.order })
-			configJSON = configSchema
-		})
-	}
-	getFiles()
+    function getFiles() {
+        configDefault = JSON.parse(fs.readFileSync(configDefaultPath, "utf8"));
 
-	const server = require('http').createServer(app)
+        if (fs.existsSync(configPath)) {
+            try {
+                config = JSON.parse(fs.readFileSync(configPath, "utf8")) //json'd config file
+            } catch (e) {
+                config = configDefault
+            }
+        } else {
+            config = configDefault
+        }
+        configDefault = JSON.parse(fs.readFileSync(configDefaultPath, "utf8"));
+        //TODO this is async, all of the remote should be async too
+        getConfigSchema(function (configSchema) {
+            //configSchema.form.push({"type":"button","title":"Submit","order":10000})
+            configSchema.form.sort(function (a, b) {
+                return a.order - b.order
+            });
+            configJSON = configSchema
+        })
+    }
 
-  // Start the server
-	server.listen(config.remote.port)
-  // Use the remote directory and initilize socket connection
+    getFiles();
+
+    const server = require('http').createServer(app);
+
+    // Start the server
+    server.listen(config.remote.port);
+
+    // Use the remote directory and initilize socket connection
     app.use(bodyParser.json());
-	app.use(express.static(__dirname + '/remote'))
-	remote.io = require('socket.io')(server)
-        /*app.put('/', function(req, res) {
-            "use strict";
-	    console.log(req.body.command);
-            if(req.body.command) {
-            	remote.emit('action', req.body.command);
-			}
-        });*/
+    app.use(express.static(__dirname + '/remote'));
+    remote.io = require('socket.io')(server);
 
-  /**
-   * When the connection begins
-   */
-	remote.io.on('connection', function (socket) {
-		socket.emit('connected')
+    app.put('/', function(req, res) {
+        remote.emit('command', "close the blinds");
+    });
 
-    // When the mirror recieves a remote command
-		socket.on('command', function (command) {
-			remote.emit('command', command)
-		})
+    /**
+     * When the connection begins
+     */
+    remote.io.on('connection', function (socket) {
+        socket.emit('connected');
 
-		socket.on('devtools', function (open) {
-			remote.emit('devtools', open)
-		})
+        // When the mirror recieves a remote command
+        socket.on('command', function (command) {
+            remote.emit('command', command);
+        });
 
-		socket.on('kiosk', function () {
-			remote.emit('kiosk')
-		})
+        socket.on('devtools', function (open) {
+            remote.emit('devtools', open);
+        });
 
-		socket.on('reload', function () {
-			remote.emit('reload')
-		})
+        socket.on('kiosk', function () {
+            remote.emit('kiosk');
+        });
 
-		socket.on('clickWakeUp', function () {
-			remote.emit('wakeUp')
-		})
-		socket.on('clickSleep', function () {
-			remote.emit('sleep')
-		})
+        socket.on('reload', function () {
+            remote.emit('reload');
+        });
 
-		socket.on('getAnnyAng', function () {
-			socket.emit('loadAnnyAng', (typeof config.general.language != 'undefined') ? config.general.language : 'en-US')
-		})
+        socket.on('clickWakeUp', function () {
+            remote.emit('wakeUp');
+        });
+        socket.on('clickSleep', function () {
+            remote.emit('sleep');
+        });
 
-		socket.on('saveConfig', function (data) { // used to save the form JSON
-			fs.writeFile(configPath, JSON.stringify(data, null, 2), "utf8", function (err) {
-				if (err) {
-					console.error(err)
-				} else {
-					remote.emit('relaunch')
-				}
-			})
-		})
+        socket.on('getAnnyAng', function () {
+            socket.emit('loadAnnyAng', (typeof config.general.language !== 'undefined') ? config.general.language : 'en-US');
+        });
 
-		socket.on('getForm', function () {
-			getFiles()
-			socket.emit("json", { "configJSON": configJSON, "configDefault": configDefault, "config": config })
-		})
+        socket.on('saveConfig', function (data) { // used to save the form JSON
+            fs.writeFile(configPath, JSON.stringify(data, null, 2), "utf8", function (err) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    remote.emit('relaunch');
+                }
+            })
+        });
 
-	}) // end - connection
+        socket.on('getForm', function () {
+            getFiles();
+            socket.emit("json", {"configJSON": configJSON, "configDefault": configDefault, "config": config});
+        });
 
-  /**
-   * When a remote disconnects
-   */
-	remote.io.on('disconnect', function () {
-		remote.emit('disconnected')
-	})// end - disconnect
-} // end - start
+    }); // end - connection
 
-module.exports = remote
+    /**
+     * When a remote disconnects
+     */
+    remote.io.on('disconnect', function () {
+        remote.emit('disconnected');
+    }); // end - disconnect
+}; // end - start
+
+module.exports = remote;
