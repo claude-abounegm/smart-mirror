@@ -52,8 +52,13 @@ remote.start = function () {
     app.use(express.static(__dirname + '/remote'));
     remote.io = require('socket.io')(server);
 
-    app.put('/', function(req, res) {
-	remote.emit('remoteCommand', req.body);
+    app.put('/', function (req, res) {
+        if(req.accepts('json') && typeof req.body.id === "string") {
+            remote.emit('remoteCommand', {
+                id: req.body.id,
+                params: Array.isArray(req.body.params) ? req.body.params : []
+            });
+        }
     });
 
     /**

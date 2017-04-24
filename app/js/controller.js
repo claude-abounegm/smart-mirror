@@ -138,27 +138,22 @@
 
                 Object
                     .keys(blindsCommands)
-                    .forEach(function(key) {
+                    .forEach(function (key) {
                         let value = blindsCommands[key];
-
                         SpeechService.addCommand(key, function () {
                             BlindsService.sendCommandToBlind(value);
                         });
                     });
             })();
 
-            ipcRenderer.on('remoteCommand', function(event, data) {
-		if(typeof data === 'object') {
-		data.params = data.params || [];
-
-                if(typeof data.id === "string" && Array.isArray(data.params)) {
-			$translate("commands." + data.id + ".voice").then(function(key) {
-				$timeout(function() {
-					SpeechService.commands[key].apply(null, data.params);
-				});
-			});
-                }
-		}
+            // find the command and execute it with the params
+            ipcRenderer.on('remoteCommand', function (event, data) {
+                $translate("commands." + data.id + ".voice")
+                    .then(function (key) {
+                        $timeout(function () {
+                            SpeechService.commands[key].apply(null, data.params);
+                        });
+                    });
             });
         };
 
