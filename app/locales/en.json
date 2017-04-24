@@ -223,18 +223,18 @@
             "description": "Stop blinds."
         },
         "hvac_cool": {
-            "text": "Start cool HVAC",
-            "voice": "start cool (hvac) (ac) (air conditioning)",
+            "text": "Turn AC on",
+            "voice": "turn (the) ac on",
             "description": "Start the cool air conditioning."
         },
         "hvac_heat": {
-            "text": "Start heat HVAC",
-            "voice": "start heat (hvac) (ac) (air conditioning)",
+            "text": "Turn heat on",
+            "voice": "turn (the) heat on",
             "description": "Start heat air conditioning."
         },
         "hvac_off": {
-            "text": "Turn off HVAC",
-            "voice": "(turn) (switch) off (hvac) (ac) (air conditioning)",
+            "text": "Turn HVAC off",
+            "voice": "turn (the) hvac off",
             "description": "Turns off HVAC"
         }
     },
